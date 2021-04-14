@@ -26,3 +26,16 @@
 ### async/await
 - `async` is a keyword that can be added before any function -> it makes sure that the function returns a promise.
 - `await` used in a block declared as `async`. Once you place `await` before any asynchronous call, it will wait for that particular `promise` to settle and then further execution from the async block will take place.
+
+## NodeJS REPL (Read-Eval-Print)
+- A `Read` state where it reads the input from a user.
+- The `Eval` state where it evaluates the user's input.
+- The `Print` state where it prints out the evaluation to console.
+
+## Backend
+- The front-end of a website consists of HTML, CSS, JS, and static assets sent to a client.
+- A web server is a process running on a computer that listens for incoming requests for information over the internet and sends back responses.
+- Storing, accessing, and manipulating data is a large part of a web application's backend.
+- Data is stored in databases which can be relational datbases or NoSQL databases.
+- Application server (server-side) is handles important tasks such as authorization and authentication.
+- The Web API is a way of interacting with application's data through HTTP requests and responses.
