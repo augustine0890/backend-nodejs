@@ -28,6 +28,7 @@
 ### async/await
 - `async` is a keyword that can be added before any function -> it makes sure that the function returns a promise.
 - `await` used in a block declared as `async`. Once you place `await` before any asynchronous call, it will wait for that particular `promise` to settle and then further execution from the async block will take place.
+- With `async/await` is able to use a more synchronous coding style and `try/catch` for error handling.
 
 ## NodeJS REPL (Read-Eval-Print)
 - A `Read` state where it reads the input from a user.
