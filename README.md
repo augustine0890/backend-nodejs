@@ -22,6 +22,8 @@
 ### Promises
 - Job queue (promise) is a way to execute the result of an async function as soon as possible.
 - The `Promise` takes two parameters, resolve and reject -> when something goes wrong, reject is called, or else resolve is called.
+- We can take advantage of chaining `.then()` and `.catch()` calls to compose a series of tasks into a single function.
+- `Promise.all()` is globally available and handles multiple async actions concurrently.
 
 ### async/await
 - `async` is a keyword that can be added before any function -> it makes sure that the function returns a promise.
@@ -42,3 +44,9 @@
 
 ## Server Sent Events (SSE)
 - Traditionally, a web page has to send a request to the server to receive new data; that is, the page requests data from the server. With server-sent events, it's possible for a server to send new data to a web page at any time, by pushing messages to the web page. These incoming messages can be treated as _Events_ + data inside the web page.
+
+<!-- ## WebSockets -->
+<!-- - The server can send a message to the client without the client explicitly requesting something. -->
+<!-- - The client and the server can talk to each other simultaneously -->
+<!-- - A little data overhead needs to be exchanged to send messages -> low latency communication. -->
+<!-- - Good for real-time and long-lived communications. -->
