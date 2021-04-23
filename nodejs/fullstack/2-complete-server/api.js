@@ -3,6 +3,9 @@ const autoCatch = require('./lib/auto-catch');
 
 module.exports = autoCatch({
     getProduct,
+    createProduct,
+    editProduct,
+    deleteProduct,
     listProducts
 })
 
@@ -25,4 +28,19 @@ async function getProduct(req, res, next) {
     if (!product) return next()
     
     res.json(product)
+};
+
+async function createProduct(req, res, next) {
+    console.log('request body', req.body);
+    res.json(req.body);
+};
+
+async function editProduct(req, res, next) {
+    console.log(req.body);
+    res.json(req.body);
+};
+
+async function deleteProduct(req, res, next) {
+    res.json({ success: true });
 }
+
