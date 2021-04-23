@@ -1,7 +1,8 @@
 module.exports = {
     cors,
     handleError,
-    notFound
+    notFound,
+    handleValidationError
 }
 
 function cors (req, res, next) {
@@ -30,4 +31,10 @@ function handleError (err, req, res, next) {
 
 function notFound (req, res) {
     res.status(404).json({ error: 'Not Found' })
+}
+
+function handleValidationError (err, req, res, next) {
+  if (err.name != 'ValidationError') return next(err)
+
+  res.status(400).json({ error: err._message, errorDetails: err.errors })
 }
