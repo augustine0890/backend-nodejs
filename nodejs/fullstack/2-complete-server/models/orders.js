@@ -34,7 +34,7 @@ function emailSchema (opts = {}) {
         type: String,
         required: !!required,
         validate: {
-            validate: isEmail,
+            validator: isEmail,
             message: props => `${props.value} is not a valid email address`
         }
     }
