@@ -17,3 +17,5 @@
 - `server.js` creates the server instance and connects endpoints to route handlers.
 - `api.js` contains functions are responsible for converting HTTP requests into HTTP responses using our model module (`products.js`)
 - `products.js` is responsible for loading and manipulating data.
+- Clear the database -> using `mongo` CLI:
+    - `db.dropDatabase()`

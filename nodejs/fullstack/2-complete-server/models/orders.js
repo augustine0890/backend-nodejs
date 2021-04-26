@@ -21,7 +21,7 @@ const Order = db.model('Order', {
       enum: ['CREATED', 'PENDING', 'COMPLETED']
     }
 });
-  
+
 module.exports = {
     get,
     list,
@@ -42,6 +42,7 @@ function emailSchema (opts = {}) {
 
 async function get (_id) {
     const order = await Order.findById(_id)
+        // pull the products from database and replace ID string with product object
         .populate('products')
         .exec();
     
@@ -50,6 +51,7 @@ async function get (_id) {
 
 async function create (fields) {
     const order = await new Order(fields).save();
+    // single document
     await order.populate('products').execPopulate();
     return order;
 };
