@@ -19,3 +19,6 @@
 - `products.js` is responsible for loading and manipulating data.
 - Clear the database -> using `mongo` CLI:
     - `db.dropDatabase()`
+
+## Authentication
+- `passport` is authentication middleware for Node.js.
