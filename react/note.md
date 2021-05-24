@@ -94,3 +94,13 @@
       }
     }
     ```
+- Hooks
+    - `npm install -D eslint-plugin-react-hooks@4.2.0`
+    - Add to `.eslintrc.json`
+    ```
+    {
+      "extends": [
+        "plugin:react-hooks/recommended",
+      ]
+    }
+    ```
