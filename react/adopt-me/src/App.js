@@ -1,5 +1,5 @@
+import { StrictMode } from "react";
 import { render } from "react-dom";
-import Pet from "./Pet";
 import SearchParams from "./SearchParams";
 
 const App = () => {
@@ -11,4 +11,9 @@ const App = () => {
   );
 };
 
-render(<App />, document.getElementById("root"));
+render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+    document.getElementById("root")
+);

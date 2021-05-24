@@ -104,3 +104,20 @@
       ]
     }
     ```
+- React Dev Tools
+    - `NODE_ENV=development`
+    - `NODE_ENV=production` --> the weight gets stripped out
+- Strict Mode
+    - It will give you additional warnings about things you shouldn't be doing.
+    ```jsx
+    // import at top
+    import { StrictMode } from "react";
+
+    // replace render
+    render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+      document.getElementById("root")
+    );
+    ```
