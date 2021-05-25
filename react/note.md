@@ -123,3 +123,26 @@
     ```
 - React Router
     - `npm install react-router-dom@5.2.0`
+- Class Properties
+    - `npm i -D @babel/plugin-proposal-class-properties@7.13.0 @babel/preset-env@7.13.5 @babel/eslint-parser@7.13.4`
+    - Modify `.babelrc`
+    ```
+    {
+      "presets": [
+        [
+          "@babel/preset-react",
+          {
+            "runtime": "automatic"
+          }
+        ],
+        "@babel/preset-env"
+      ],
+      "plugins": ["@babel/plugin-proposal-class-properties"]
+    }
+    ```
+    - Add to top level of `.eslintrc.json`
+    ```
+    {
+        "parser": "@babel/eslint-parser",
+    }
+    ```
