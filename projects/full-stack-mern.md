@@ -69,3 +69,27 @@
     - `yarn development`: get Nodemon, Webpack, and the server started for development
     - `yarn build`: generate the client and server code bundles for production mode (comment out `devBundle.compile` code from `server.js`)
     - `yarn start` run the bundled code in production
+
+## Backend with MongoDB, Express, and Node
+- User CRUD and Auth functionality
+    - Sign up: users can register by creating a new account using an email address
+    - User list: any visitor can see a list of all registered users
+    - Authentication: registered users can sign-in and sign-out
+    - Protected user profile: only registered users can view individual user details after signing in.
+    - Authorized user edit and delete: only a registered and authenticated user can edit or remove their own user account details
+- Add `package.json`
+    - `yarn init`
+- Babel
+    - `yarn add --dev @babel/core babel-loader @babel/preset-env`
+- Webpack
+    - Compile and bundle the server-side code using Babel.
+    - `yarn add --dev webpack webpack-cli webpack-node-externals`
+- Express
+    - body-parser: request body-parsing middleware to handle the complexities of parsing streamable request objects so that we can simplify browser-server communication by exchanging JSON in the request body. To install the module, run `yarn add body-parser`. 
+    - cookie-parser: cookie parsing middleware to parse and set cookies in request objects. To install the cookie-parser module, run `yarn add cookie-parser`.
+    - compression: compression middleware that will attempt to compress response bodies for all requests that traverse through the middleware --> `yarn add compression`.
+    - helmet: collection of middleware functions to help secure Express apps by setting various HTTP headers --> `yarn add helmet`.
+    - cors: middleware to enable cross-origin resource sharing (CORS) --> `yarn add cors`.
+- MongoDB
+    - `yarn add mongoose`
+    
