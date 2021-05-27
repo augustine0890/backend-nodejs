@@ -92,4 +92,21 @@
     - cors: middleware to enable cross-origin resource sharing (CORS) --> `yarn add cors`.
 - MongoDB
     - `yarn add mongoose`
-    
+
+## React Frontend
+- Babel
+    - `yarn add --dev @babel/preset-react`
+- Webpack
+    - Bundle client-side code after compiling it with Babel.
+    - `yarn add --dev webpack-dev-middleware webpack-hot-middleware file-loader`
+    - `yarn add react-hot-loader @hot-loader/react-dom`
+- React Dependencies
+    - `yarn add react react-dom`
+    - `yarn add react-router react-router-dom`
+- Material-UI
+    - `yarn add @material-ui/core @material-ui/icons`
+    - Add style links into `template.js`
+    ```html
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    ```
