@@ -19,7 +19,7 @@ const create = async (req, res) => {
 /**
  * Load user and append to req
  */
-const userbyID = async (req, res, next, id) => {
+const userByID = async (req, res, next, id) => {
     try {
         let user = await User.findById(id)
         if (!user) return res.status('400').json({
@@ -83,7 +83,7 @@ const remove = async (req, res) => {
 
 export default {
     create,
-    userbyID,
+    userByID,
     read,
     list,
     remove,
