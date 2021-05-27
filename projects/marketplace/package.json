@@ -1,0 +1,33 @@
+{
+  "name": "marketplace",
+  "version": "1.0.0",
+  "description": "NFTs Marketplace",
+  "main": "/dist/server.generated.js",
+  "author": "augustine",
+  "license": "MIT",
+  "scripts": {
+    "development": "nodemon",
+    "build": "webpack --config webpack.config.client.production.js && webpack --mode=production --config webpack.config.server.js",
+    "start": "NODE_ENV=production node ./dist/server.generated.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "babel-loader": "^8.2.2",
+    "nodemon": "^2.0.7",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-middleware": "^4.3.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^5.12.11"
+  }
+}
