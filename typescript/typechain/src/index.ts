@@ -1,10 +1,24 @@
 console.log("Hello World!");
 
-interface Human {
-    name: string;
-    age: number;
-    gender: string;
+// interface Human {
+    // name: string;
+    // age: number;
+    // gender: string;
+// };
+
+class Human {
+    public name: string;
+    public age: number;
+    public gender: string;
+
+    constructor(name: string, age: number, gender: string) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
 };
+
+const augt = new Human("Augustine", 31, "male");
 
 const person = {
     name: "Augustine Nguyen",
@@ -19,6 +33,7 @@ const sayHi = (person: Human) => {
 // sayHi(yourName, age, gender);
 // sayHi("Smith", 28, "male");
 // sayHi("Sally", 25, "female");
-sayHi(person);
+// sayHi(person);
+sayHi(augt);
 
 export {};
