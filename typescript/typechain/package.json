@@ -1,0 +1,12 @@
+{
+  "name": "typechain",
+  "version": "1.0.0",
+  "description": "Blockchain with Typescript",
+  "main": "index.js",
+  "author": "augustine",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "prestart": "tsc"
+  }
+}
