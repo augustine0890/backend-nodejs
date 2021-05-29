@@ -21,8 +21,14 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
     // res.sendFile(path.join(__dirname,  'views/index.html'));
-    res.render('index', { list: ['a', 'b'], title: 'Library' });
-})
+    res.render(
+        'index',
+        {
+            list: ['Books', 'Authors'],
+            title: 'Library'
+        }
+    );
+});
 
 app.listen(port, function() {
     console.log(`Listening on PORT ${chalk.green(port)}`);
