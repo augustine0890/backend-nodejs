@@ -16,3 +16,22 @@
     - `yarn add class-transformer`
 - Mapped Types
     - `yarn add @nestjs/mapped-types`
+
+## Docker
+- Install Docker
+- Create a docker-compose and Run docker-compose
+    - `docker-compose up -d`
+
+## TYPEORM Module
+- `yarn add @nestjs/typeorm typeorm pg`
+- Run `.env`
+    - `. ./.env`
+- Go inside the container
+    - `docker exec -it db bash`
+- Go to localhose
+    - `psql -h localhost -p 5432 -U postgres`
+- Migrations
+    - `npx typeorm migration:create -n CoffeeRefactor`
+    - `npx typeorm migration:run`
+    - `npx typeorm migration:revert`
+- Build: `yarn build`
