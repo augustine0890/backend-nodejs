@@ -35,3 +35,7 @@
     - `npx typeorm migration:run`
     - `npx typeorm migration:revert`
 - Build: `yarn build`
+
+## Application Configuration
+- `yarn add @nestjs/config`
+- `yarn add -D @hapi/joi`
