@@ -39,3 +39,6 @@
 ## Application Configuration
 - `yarn add @nestjs/config`
 - `yarn add -D @hapi/joi`
+
+__Exceptions with Filters__
+- `nest g filter common/filters/http-exception`
