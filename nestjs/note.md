@@ -52,3 +52,7 @@ __Custom Pipes__
 - `nest g pipe common/pipes/parse-int`
 __Middleware__
 - `nest g middleware common/middleware/logging`
+
+## OpenAPI Specification
+- Operations, input parameters, responses, authentication.
+- `yarn add @nestjs/swagger swagger-ui-express`
