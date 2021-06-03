@@ -42,3 +42,13 @@
 
 __Exceptions with Filters__
 - `nest g filter common/filters/http-exception`
+__Protect Routers with Guards__
+- `nest g guard common/guards/api-key`
+- `nest g mo common`
+__Interceptors__
+- `nest g interceptor common/interceptors/wrap-response`
+- `nest g interceptor common/interceptors/timeout`
+__Custom Pipes__
+- `nest g pipe common/pipes/parse-int`
+__Middleware__
+- `nest g middleware common/middleware/logging`
