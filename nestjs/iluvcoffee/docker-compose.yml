@@ -9,10 +9,11 @@ services:
             - '5432:5432'
         env_file:
             - docker.env
-    # test-db:
-        # image: postgres
-        # restart: always
-        # ports:
-            # - '5433:5432'
-        # environment:
-            # POSTGRES_PASSWORD: supertree
+    test-db:
+        image: postgres
+        container_name: test-db
+        restart: always
+        ports:
+            - '5433:5432'
+        env_file:
+            - docker.env

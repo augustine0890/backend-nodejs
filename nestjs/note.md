@@ -56,3 +56,10 @@ __Middleware__
 ## OpenAPI Specification
 - Operations, input parameters, responses, authentication.
 - `yarn add @nestjs/swagger swagger-ui-express`
+
+## Testing
+- `yarn test` # for unit tests
+- `yarn test:cov` # for test coverage
+- `yarn test:e2e` # for e2e tests
+- `yarn test:watch coffees.service`
+- `yarn test:e2e coffees`

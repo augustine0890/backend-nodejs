@@ -15,10 +15,16 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET)', (done) => {
     return request(app.getHttpServer())
       .get('/')
+      .set('Authorization', process.env.API_KEY)
       .expect(200)
-      .expect('Hello World!');
+      .expect('NestJS Fundamentals')
+      .end(done);
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
