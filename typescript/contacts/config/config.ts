@@ -7,6 +7,6 @@ const config = {
     'mongodb://' + (process.env.IP || 'localhost') + ':' +
     (process.env.MONGO_PORT || '27017') +
     '/contacts'
-}
+};
 
 export default config;
