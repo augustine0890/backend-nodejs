@@ -1,9 +1,10 @@
 import config from './config/config';
+import { Settings } from './settings';
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import routes from './src/routes/routes';
 
-const chalk = require('chalk');
+import chalk = require('chalk');
 const app = express();
 
 // mongoose connection
@@ -31,11 +32,12 @@ routes(app);
 
 // serving static files
 app.use(express.static('public'));
+// Settings.PORT or config.port
 app.listen(config.port, () => {
   try {
     console.log(
       `${chalk.green('✓')} ${chalk.blue(
-        `Listening on port ${config.port}. Visit http://localhost:${config.port}/ in your browser.`
+        `Listening on port ${Settings.PORT}. Visit http://localhost:${config.port}/ in your browser.`
       )}`
     );
   } catch (err) {

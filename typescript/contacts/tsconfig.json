@@ -4,10 +4,12 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "allowJs": true,
-    "target": "ES6"
+    "target": "ES6",
+    "experimentalDecorators": true,
   },
   "include": [
     "./src/**/*",
-    "index.ts"
+    "index.ts",
+    ""
 , "config/message.ts"  ],
 }
