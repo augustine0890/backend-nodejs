@@ -8,7 +8,7 @@
     "start": "nodemon ./index.js --exec babel-node -e js"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "chalk": "^4.1.1",
     "express": "^4.17.1",
     "mongoose": "^5.12.13",
     "nodemon": "^2.0.7"
