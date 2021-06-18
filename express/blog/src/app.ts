@@ -1,12 +1,11 @@
 import express from 'express';
+import Controller from './interfaces/controller.interface';
 
 class App {
   public app: express.Application;
-  public port: number;
 
-  constructor(controllers: any, port: number) {
+  constructor(controllers: Controller[]) {
     this.app = express();
-    this.port = port;
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -14,7 +13,7 @@ class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
+      console.log(`App listening on the port 3000`);
     });
   }
 
@@ -22,8 +21,8 @@ class App {
     this.app.use(express.json());
   }
 
-  private initializeControllers(controllers: any) {
-    controllers.forEach((controller: any) => {
+  private initializeControllers(controllers: Controller[]) {
+    controllers.forEach((controller: Controller) => {
       this.app.use('/', controller.router);
     });
   }
