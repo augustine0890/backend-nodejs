@@ -7,18 +7,17 @@ const port = process.env.PORT || 3000;
 export class App {
   private app: Application;
 
-  // constructor(controllers: Controller[]) {
-    constructor() {
+  constructor(controllers: Controller[]) {
     this.app = express();
 
     this.initializeMiddlewares();
-    // this.initializeControllers(controllers);
+    this.initializeControllers(controllers);
   }
 
   public listen(): void {
     this.app.listen(port, () => {
       console.log(`App listening on port ${port}`);
-    })
+    });
   }
 
   public test(): void {
@@ -37,7 +36,7 @@ export class App {
   }
 
   private initializeControllers(controllers: Controller[]): void {
-    controllers.forEach(controller => {
+    controllers.forEach((controller) => {
       this.app.use('/', controller.router);
     });
   }
