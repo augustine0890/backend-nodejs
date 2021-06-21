@@ -8,6 +8,8 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { EmailOrUsernameInUseExcepton } from '../../exceptions/EmailOrUsernameInUse';
 import { DataStoredInToken } from '../../types/dataStoredInToken.interface';
 import { HttpException } from '../../exceptions/HttpException';
+import { LoginUserDTO } from './dto/login-user.dto';
+import { WrongCredentialsException } from '../../exceptions/WrongCredentialException';
 
 export class AuthService {
   private userRepository = getRepository(User);
@@ -34,6 +36,22 @@ export class AuthService {
 
     const token = this.createToken(savedUser);
     return { token, ...user };
+  };
+
+  signIn = async ({ email, password }: LoginUserDTO) => {
+    const existingUser = await this.userRepository.findOne({ email });
+    if (!existingUser) {
+      throw new WrongCredentialsException();
+    }
+
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      throw new WrongCredentialsException();
+    }
+
+    const { id, username } = existingUser;
+    const token = this.createToken(existingUser);
+    return { token, id, username };
   };
 
   createToken = ({ id, username }: IUser): string => {
