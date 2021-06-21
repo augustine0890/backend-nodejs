@@ -6,6 +6,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { validationMiddleware } from '../../middlewares/validation.middleware';
+import { HttpException } from '../../exceptions/HttpException';
 
 export class AuthController implements Controller {
   public path = '/auth';
@@ -30,7 +31,15 @@ export class AuthController implements Controller {
       )
       .get(this.path, authMiddleware, this.getCurrentUser)
       .delete(this.path, authMiddleware, this.deleteAccount)
-      .get('/users', this.getAllUsers);
+      .get('/users', this.getAllUsers)
+      .post(
+        `${this.path}/encrypt`,
+        this.encryptPayload
+      )
+      .post(
+        `${this.path}/decrypt`,
+        this.decryptPayload
+      )
   };
 
   private signUp = async (
@@ -91,4 +100,38 @@ export class AuthController implements Controller {
     const users = await this.authService.getAllAccount();
     res.status(200).send(users);
   }
+
+  private encryptPayload = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { payload } = req.body
+      const encrypted = await this.authService.encryptData(payload);
+      res.end(encrypted)
+    } catch (err) {
+      console.error(err);
+      next(err);
+      throw new HttpException(500, 'Something goes wrong');
+    }
+  }
+
+  private decryptPayload = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { payload } = req.body;
+      console.log(payload)
+      const decrypted = await this.authService.decryptData(payload);
+      res.end(decrypted)
+    } catch (err) {
+      console.error(err);
+      next(err);
+      throw new HttpException(500, 'Something goes wrong');
+    }
+  }
+
 }

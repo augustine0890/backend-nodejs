@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
+import crypto from 'crypto';
 
 import { User } from './user.entity';
 import { User as IUser } from './interfaces/user.interface';
@@ -69,7 +70,7 @@ export class AuthService {
     return accounts;
   }
 
-  createToken = ({ id, username }: IUser): string => {
+  private createToken = ({ id, username }: IUser): string => {
     const expiresIn = 60 * 60; // an hour
     const secret = process.env.JWT_ACCESS_TOKEN_SECRET;
     const dataStoredInToken: DataStoredInToken = { id, username };
@@ -80,4 +81,30 @@ export class AuthService {
 
     return jwt.sign(dataStoredInToken, secret, { expiresIn });
   };
+
+  encryptData = async (payload: string) => {
+    // const secret_key = crypto.randomBytes(16).toString("hex");
+    const secret_key = 'ceb1c79889ffb4d0e1aa4a74d3be2723';
+
+    let iv = Buffer.from(crypto.randomBytes(16)).toString('hex').slice(0, 16);
+    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secret_key), iv);
+    let encrypted = cipher.update(payload);
+  
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return iv + ':' + encrypted.toString('hex');
+  }
+
+  decryptData = async (payload: string) => {
+    // const secret_key = crypto.randomBytes(16).toString("hex");
+    const secret_key = 'ceb1c79889ffb4d0e1aa4a74d3be2723';
+    const payloadParts: string[] = payload.includes(':') ? payload.split(':') : [];
+    const iv = Buffer.from(payloadParts.shift() || '', 'binary');
+    let encryptedPayload = Buffer.from(payloadParts.join(':'), 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secret_key), iv);
+    let decryted = decipher.update(encryptedPayload)
+
+    decryted = Buffer.concat([decryted, decipher.final()]);
+
+    return decryted.toString();
+  }
 }
