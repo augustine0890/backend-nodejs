@@ -10,6 +10,7 @@ import { DataStoredInToken } from '../../types/dataStoredInToken.interface';
 import { HttpException } from '../../exceptions/HttpException';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { WrongCredentialsException } from '../../exceptions/WrongCredentialException';
+import { UserNotFoundException } from '../../exceptions/UserNotFoundException';
 
 export class AuthService {
   private userRepository = getRepository(User);
@@ -53,6 +54,20 @@ export class AuthService {
     const token = this.createToken(existingUser);
     return { token, id, username };
   };
+
+  deleteAccount = async (id: string) => {
+    const deleteUser = await this.userRepository.delete({ id });
+    if (deleteUser.affected === 0) {
+      throw new UserNotFoundException(id);
+    }
+
+    return deleteUser;
+  };
+
+  getAllAccount = async () => {
+    const accounts = this.userRepository.find();
+    return accounts;
+  }
 
   createToken = ({ id, username }: IUser): string => {
     const expiresIn = 60 * 60; // an hour

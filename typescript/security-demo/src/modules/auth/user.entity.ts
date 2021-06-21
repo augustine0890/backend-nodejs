@@ -1,3 +1,4 @@
+import { classToPlain, Exclude } from 'class-transformer';
 import {
   BaseEntity,
   Column,
@@ -19,5 +20,10 @@ export class User extends BaseEntity {
   email!: string;
 
   @Column()
+  @Exclude({ toPlainOnly: true })
   password!: string;
+
+  toJSON() {
+    return classToPlain(this);
+  }
 }

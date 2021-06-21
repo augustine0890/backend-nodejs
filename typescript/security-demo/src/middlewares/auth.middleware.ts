@@ -15,19 +15,21 @@ export const authMiddleware = async (
 ) => {
   const userRepository = getRepository(User);
   const secret = process.env.JWT_ACCESS_TOKEN_SECRET;
-  const token = req.header('x-auth-token');
+  // const token = req.header('x-auth-token');
+  const authHeader = req.headers.authorization;
 
   if (!secret) {
     next(new HttpException(500, 'Internal server error'));
     return;
   }
 
-  if (!token) {
+  if (!authHeader) {
     next(new AuthenticationTokenMissingException());
     return;
   }
 
   try {
+    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, secret) as DataStoredInToken;
     const user = await userRepository.findOne(decoded.id);
 
