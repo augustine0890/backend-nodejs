@@ -15,6 +15,7 @@ import { UserNotFoundException } from '../../exceptions/UserNotFoundException';
 
 export class AuthService {
   private userRepository = getRepository(User);
+  private secret_key = 'ceb1c79889ffb4d0e1aa4a74d3be2723';
 
   signUp = async (userData: CreateUserDTO) => {
     const { username, email, password } = userData;
@@ -68,7 +69,7 @@ export class AuthService {
   getAllAccount = async () => {
     const accounts = this.userRepository.find();
     return accounts;
-  }
+  };
 
   private createToken = ({ id, username }: IUser): string => {
     const expiresIn = 60 * 60; // an hour
@@ -83,28 +84,57 @@ export class AuthService {
   };
 
   encryptData = async (payload: string) => {
-    // const secret_key = crypto.randomBytes(16).toString("hex");
-    const secret_key = 'ceb1c79889ffb4d0e1aa4a74d3be2723';
-
+    const message = JSON.stringify(payload);
     let iv = Buffer.from(crypto.randomBytes(16)).toString('hex').slice(0, 16);
-    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secret_key), iv);
-    let encrypted = cipher.update(payload);
-  
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return iv + ':' + encrypted.toString('hex');
-  }
 
-  decryptData = async (payload: string) => {
-    // const secret_key = crypto.randomBytes(16).toString("hex");
-    const secret_key = 'ceb1c79889ffb4d0e1aa4a74d3be2723';
-    const payloadParts: string[] = payload.includes(':') ? payload.split(':') : [];
-    const iv = Buffer.from(payloadParts.shift() || '', 'binary');
-    let encryptedPayload = Buffer.from(payloadParts.join(':'), 'hex');
-    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secret_key), iv);
-    let decryted = decipher.update(encryptedPayload)
+    const encryptor = crypto.createCipheriv('aes-256-cbc', this.secret_key, iv);
+    const encrypted =
+      Buffer.from(iv).toString('base64') +
+      encryptor.update(message, 'utf8', 'base64') +
+      encryptor.final('base64');
+    const hmac = crypto
+      .createHmac('md5', this.secret_key)
+      .update(encrypted)
+      .digest('hex');
+    return {
+      encrypted,
+      hmac,
+    };
+  };
 
-    decryted = Buffer.concat([decryted, decipher.final()]);
+  decryptData = async (
+    encrypted: string,
+    hmac: string,
+    toJson: boolean = true,
+  ): Promise<{} | string | false> => {
+    if (
+      crypto
+        .createHmac('md5', this.secret_key)
+        .update(encrypted)
+        .digest('hex') == hmac
+    ) {
+      var iv = Buffer.from(encrypted.substr(0, 24), 'base64').toString();
+      var decryptor = crypto.createDecipheriv(
+        'aes-256-cbc',
+        this.secret_key,
+        iv,
+      );
+      const decrypted =
+        decryptor.update(encrypted.substr(24), 'base64', 'utf8') +
+        decryptor.final('utf8');
 
-    return decryted.toString();
-  }
+      if (toJson) {
+        try {
+          return JSON.parse(decrypted);
+        } catch (err) {
+          console.error(err);
+          return false;
+        }
+      } else {
+        return decrypted;
+      }
+    }
+    console.log('Bad signature.');
+    return false;
+  };
 }

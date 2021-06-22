@@ -32,14 +32,8 @@ export class AuthController implements Controller {
       .get(this.path, authMiddleware, this.getCurrentUser)
       .delete(this.path, authMiddleware, this.deleteAccount)
       .get('/users', this.getAllUsers)
-      .post(
-        `${this.path}/encrypt`,
-        this.encryptPayload
-      )
-      .post(
-        `${this.path}/decrypt`,
-        this.decryptPayload
-      )
+      .post(`${this.path}/encrypt`, this.encryptPayload)
+      .post(`${this.path}/decrypt`, this.decryptPayload);
   };
 
   private signUp = async (
@@ -93,45 +87,42 @@ export class AuthController implements Controller {
     res.status(200).json({ id, username });
   };
 
-  private getAllUsers = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  private getAllUsers = async (req: Request, res: Response): Promise<void> => {
     const users = await this.authService.getAllAccount();
     res.status(200).send(users);
-  }
+  };
 
   private encryptPayload = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      const { payload } = req.body
-      const encrypted = await this.authService.encryptData(payload);
-      res.end(encrypted)
+      let { payload } = req.body;
+      payload = JSON.stringify(payload);
+      const data = await this.authService.encryptData(payload);
+      res.send(data);
+      next();
     } catch (err) {
       console.error(err);
-      next(err);
       throw new HttpException(500, 'Something goes wrong');
     }
-  }
+  };
 
   private decryptPayload = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      const { payload } = req.body;
-      console.log(payload)
-      const decrypted = await this.authService.decryptData(payload);
-      res.end(decrypted)
+      let { encrypted, hmac } = req.body;
+      const decrypted = await this.authService.decryptData(encrypted, hmac);
+      console.log('DECRYPT', decrypted);
+      res.status(200).send(decrypted);
+      next();
     } catch (err) {
       console.error(err);
-      next(err);
       throw new HttpException(500, 'Something goes wrong');
     }
-  }
-
+  };
 }
