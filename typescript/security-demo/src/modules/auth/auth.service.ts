@@ -85,7 +85,7 @@ export class AuthService {
 
   encryptData = async (payload: string) => {
     const message = JSON.stringify(payload);
-    let iv = Buffer.from(crypto.randomBytes(16)).toString('hex').slice(0, 16);
+    const iv = Buffer.from(crypto.randomBytes(16)).toString('hex').slice(0, 16);
 
     const encryptor = crypto.createCipheriv('aes-256-cbc', this.secret_key, iv);
     const encrypted =
@@ -106,15 +106,15 @@ export class AuthService {
     encrypted: string,
     hmac: string,
     toJson: boolean = true,
-  ): Promise<{} | string | false> => {
+  ): Promise<{} | string | boolean> => {
     if (
       crypto
         .createHmac('md5', this.secret_key)
         .update(encrypted)
-        .digest('hex') == hmac
+        .digest('hex') === hmac
     ) {
-      var iv = Buffer.from(encrypted.substr(0, 24), 'base64').toString();
-      var decryptor = crypto.createDecipheriv(
+      const iv = Buffer.from(encrypted.substr(0, 24), 'base64').toString();
+      const decryptor = crypto.createDecipheriv(
         'aes-256-cbc',
         this.secret_key,
         iv,

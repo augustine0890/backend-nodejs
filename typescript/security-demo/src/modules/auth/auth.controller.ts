@@ -115,11 +115,20 @@ export class AuthController implements Controller {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      let { encrypted, hmac } = req.body;
+      const { encrypted, hmac } = req.body;
       const decrypted = await this.authService.decryptData(encrypted, hmac);
-      console.log('DECRYPT', decrypted);
-      res.status(200).send(decrypted);
-      next();
+      if (typeof decrypted === 'string') {
+        const payload = JSON.parse(decrypted);
+        // console.log(payload.seq_user_game);
+        // console.log(parseInt(payload.seq_nft_info, 10));
+        // console.log(payload.code);
+        // console.log(payload.seq_item_game);
+        // console.log(JSON.stringify(payload.attribute));
+        res.status(200).send(payload);
+        next();
+      } else {
+        next('Decrypted is an empty.');
+      }
     } catch (err) {
       console.error(err);
       throw new HttpException(500, 'Something goes wrong');
