@@ -12,6 +12,7 @@ import { HttpException } from '../../exceptions/HttpException';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { WrongCredentialsException } from '../../exceptions/WrongCredentialException';
 import { UserNotFoundException } from '../../exceptions/UserNotFoundException';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 export class AuthService {
   private userRepository = getRepository(User);
@@ -35,7 +36,11 @@ export class AuthService {
     });
 
     const savedUser = await this.userRepository.save(newUser);
-    const user = { id: savedUser.id, username: savedUser.username };
+    const user = {
+      id: savedUser.id,
+      username: savedUser.username,
+      seller: savedUser.seller,
+    };
 
     const token = this.createToken(savedUser);
     return { token, ...user };
@@ -52,23 +57,31 @@ export class AuthService {
       throw new WrongCredentialsException();
     }
 
-    const { id, username } = existingUser;
+    const { id, username, seller } = existingUser;
     const token = this.createToken(existingUser);
-    return { token, id, username };
+    return { token, id, username, seller };
   };
 
-  deleteAccount = async (id: string) => {
+  get = async (id: string) => {
+    const user = await this.userRepository.findOne(id);
+    return user;
+  };
+  update = async (id: string, info: UpdateUserDTO) => {
+    let user = await this.userRepository.update(id, info);
+    return user;
+  };
+
+  deleteUser = async (id: string) => {
     const deleteUser = await this.userRepository.delete({ id });
     if (deleteUser.affected === 0) {
       throw new UserNotFoundException(id);
     }
-
     return deleteUser;
   };
 
-  getAllAccount = async () => {
-    const accounts = this.userRepository.find();
-    return accounts;
+  getAllUser = async () => {
+    const users = this.userRepository.find();
+    return users;
   };
 
   private createToken = ({ id, username }: IUser): string => {

@@ -1,4 +1,9 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 import { Controller } from '../../types/controller.interface';
 import { User } from './user.entity';
 import { AuthService } from './auth.service';
@@ -7,6 +12,7 @@ import { authMiddleware } from '../../middlewares/auth.middleware';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { validationMiddleware } from '../../middlewares/validation.middleware';
 import { HttpException } from '../../exceptions/HttpException';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 export class AuthController implements Controller {
   public path = '/auth';
@@ -30,7 +36,9 @@ export class AuthController implements Controller {
         this.signIn,
       )
       .get(this.path, authMiddleware, this.getCurrentUser)
-      .delete(this.path, authMiddleware, this.deleteAccount)
+      .get('/user/:id', this.getUserById)
+      .patch('/user', authMiddleware, this.updateUser)
+      .delete(this.path, authMiddleware, this.deleteUser)
       .get('/users', this.getAllUsers)
       .post(`${this.path}/encrypt`, this.encryptPayload)
       .post(`${this.path}/decrypt`, this.decryptPayload);
@@ -66,13 +74,39 @@ export class AuthController implements Controller {
     }
   };
 
-  private deleteAccount = async (
+  private getUserById: RequestHandler = async (req, res, next) => {
+    const id = req.params.id;
+    try {
+      const user = await this.authService.get(id);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private updateUser: RequestHandler = async (
+    req,
+    res,
+    next,
+  ): Promise<void> => {
+    const updateData: UpdateUserDTO = req.body;
+    const { id }: User = req.user;
+    try {
+      await this.authService.update(id, updateData);
+      const updatedUser = await this.authService.get(id);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private deleteUser = async (
     { user: { id } }: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      await this.authService.deleteAccount(id);
+      await this.authService.deleteUser(id);
       res.status(200).json({ success: true });
     } catch (err) {
       next(err);
@@ -83,12 +117,12 @@ export class AuthController implements Controller {
     req: Request,
     res: Response,
   ): Promise<void> => {
-    const { id, username }: User = req.user;
-    res.status(200).json({ id, username });
+    const { id, username, seller }: User = req.user;
+    res.status(200).json({ id, username, seller });
   };
 
   private getAllUsers = async (req: Request, res: Response): Promise<void> => {
-    const users = await this.authService.getAllAccount();
+    const users = await this.authService.getAllUser();
     res.status(200).send(users);
   };
 

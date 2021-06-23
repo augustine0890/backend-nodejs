@@ -3,6 +3,7 @@ import {
   MinLength,
   MaxLength,
   IsEmail,
+  IsBoolean,
   // Matches
 } from 'class-validator';
 
@@ -27,4 +28,7 @@ export class CreateUserDTO {
   // }
   // )
   password!: string;
+
+  @IsBoolean()
+  seller: boolean;
 }
