@@ -10,8 +10,8 @@ services:
     env_file:
       - docker.env
     networks:
-      - security-demo
+      - marketplace
 
 networks:
-  security-demo:
+  marketplace:
     driver: bridge

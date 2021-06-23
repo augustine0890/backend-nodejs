@@ -1,7 +1,7 @@
 {
-  "name": "security-demo",
+  "name": "marketplace",
   "version": "1.0.0",
-  "description": "Encrypt and decrypt params",
+  "description": "NFTs Marketplace",
   "main": "index.js",
   "author": "augustine",
   "license": "MIT",

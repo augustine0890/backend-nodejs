@@ -1,4 +1,4 @@
-# Authentication
+# Marketplace
 
 ## Introduction
 - You need a valid API key and API secret to call an API.
