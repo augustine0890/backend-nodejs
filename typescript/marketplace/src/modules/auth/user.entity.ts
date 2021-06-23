@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Shop } from '../shop/shop.entity';
 
 @Entity('users')
 @Unique(['username'])
@@ -40,6 +42,9 @@ export class User extends BaseEntity {
 
   @Column({ default: false })
   seller: boolean;
+
+  @OneToMany(() => Shop, (shop: Shop) => shop.ower)
+  shops: Shop[];
 
   toJSON() {
     return classToPlain(this);
