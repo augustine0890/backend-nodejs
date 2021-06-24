@@ -35,6 +35,6 @@ export class Shop {
   })
   update_at: Date;
 
-  @ManyToOne(() => User, (ower: User) => ower.shops)
-  ower: User;
+  @ManyToOne(() => User, (onwer: User) => onwer.shops)
+  owner: User;
 }

@@ -1,7 +1,6 @@
 import express, { RequestHandler } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { Controller } from '../../types/controller.interface';
-import { User } from '../auth/user.entity';
 import { CreateShopDTO } from './dto/create-shop.dto';
 import { ShopService } from './shop.service';
 import { imageUpload } from '../../utils/uploadImg';
@@ -18,7 +17,6 @@ export class ShopController implements Controller {
   private initializeRoutes = (): void => {
     this.router.post(
       `${this.path}/create`,
-      authMiddleware,
       imageUpload.single('image'),
       this.createShop,
     );
@@ -28,15 +26,20 @@ export class ShopController implements Controller {
       this.deleteShop,
     );
     this.router.get(`${this.path}`, this.getAllShops);
+    this.router.get(`${this.path}/:id`, this.getShop);
+    this.router.get(
+      `${this.path}/by/:ownerId`,
+      authMiddleware,
+      this.getShopByOwer,
+    );
   };
 
   private createShop: RequestHandler = async (req, res, next) => {
     try {
       // const shopData: CreateShopDTO = JSON.parse(req.body.data);
       const shopData: CreateShopDTO = req.body;
-      const image = req.file && req.file.path;
-      const { id }: User = req.user;
-      const newShop = await this.shopService.create(id, image, shopData);
+      const image = req.file! && req.file.path!;
+      const newShop = await this.shopService.create(image, shopData);
 
       res.status(200).json(newShop);
       next();
@@ -45,12 +48,44 @@ export class ShopController implements Controller {
     }
   };
 
-  private getAllShops: RequestHandler = async (req, res, next) => {
+  private getAllShops: RequestHandler = async (_, res, next) => {
     try {
       const shops = await this.shopService.getAll();
       res.status(200).json(shops);
+      next();
+    } catch (err) {
+      res.status(400).json({
+        error: true,
+        message: 'Could not get all Shops.',
+      });
+    }
+  };
+
+  private getShop: RequestHandler = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const shop = await this.shopService.getById(id);
+      if (shop) {
+        const { id, image, ...other } = shop;
+        res.status(200).json(other);
+        next();
+      }
     } catch (err) {
       next(err);
+    }
+  };
+
+  private getShopByOwer: RequestHandler = async (req, res, next) => {
+    try {
+      const ownerId = req.params.ownerId;
+      const shops = await this.shopService.findByOwner(ownerId);
+      res.status(200).json(shops);
+      next();
+    } catch (err) {
+      res.status(400).json({
+        error: true,
+        message: `{err}`,
+      });
     }
   };
 

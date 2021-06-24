@@ -80,7 +80,7 @@ export class AuthService {
   };
 
   getAllUser = async () => {
-    const users = this.userRepository.find();
+    const users = await this.userRepository.find();
     return users;
   };
 

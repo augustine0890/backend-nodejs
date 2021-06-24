@@ -43,7 +43,7 @@ export class User extends BaseEntity {
   @Column({ default: false })
   seller: boolean;
 
-  @OneToMany(() => Shop, (shop: Shop) => shop.ower)
+  @OneToMany(() => Shop, (shop: Shop) => shop.owner)
   shops: Shop[];
 
   toJSON() {
