@@ -3,6 +3,7 @@ import { User } from '../auth/user.entity';
 import { CreateShopDTO } from './dto/create-shop.dto';
 import { Shop } from './shop.entity';
 import { AuthService } from '../auth/auth.service';
+import { UpdateShopDTO } from './dto/update-shop.dto';
 
 export class ShopService {
   private shopRepository = getRepository(Shop);
@@ -29,6 +30,18 @@ export class ShopService {
     } else {
       return `You may not a seller.`;
     }
+  };
+
+  update = async (id: string, updateShopData: UpdateShopDTO) => {
+    await this.shopRepository.update(id, updateShopData);
+    const updatedShop = await this.shopRepository.findOne(id);
+    if (updatedShop) {
+      return updateShopData;
+    }
+    return {
+      error: true,
+      message: `Could not find the shop with #${id}`,
+    };
   };
 
   getAll = async () => {

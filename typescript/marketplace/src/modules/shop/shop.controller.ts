@@ -4,6 +4,7 @@ import { Controller } from '../../types/controller.interface';
 import { CreateShopDTO } from './dto/create-shop.dto';
 import { ShopService } from './shop.service';
 import { imageUpload } from '../../utils/uploadImg';
+import { UpdateShopDTO } from './dto/update-shop.dto';
 
 export class ShopController implements Controller {
   public path = '/shops';
@@ -24,6 +25,12 @@ export class ShopController implements Controller {
       `${this.path}/delete/:id`,
       authMiddleware,
       this.deleteShop,
+    );
+    this.router.put(
+      `${this.path}/edit/:id`,
+      authMiddleware,
+      imageUpload.single('image'),
+      this.updateShop,
     );
     this.router.get(`${this.path}`, this.getAllShops);
     this.router.get(`${this.path}/:id`, this.getShop);
@@ -96,6 +103,24 @@ export class ShopController implements Controller {
       res.status(200).json({ success: true });
     } catch (err) {
       next(err);
+    }
+  };
+
+  private updateShop: RequestHandler = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const image = req.file! && req.file.path!;
+      const updateShopData: UpdateShopDTO = image
+        ? { image, ...req.body }
+        : req.body;
+      const newShop = await this.shopService.update(id, updateShopData);
+      res.status(200).json(newShop);
+      next();
+    } catch (err) {
+      res.status(400).json({
+        error: true,
+        message: `Could not update the shop ${err}.`,
+      });
     }
   };
 }
