@@ -3,7 +3,6 @@ import { Application } from 'express-serve-static-core';
 import { Controller } from './types/controller.interface';
 
 const port = process.env.PORT || 3000;
-
 export class App {
   private app: Application;
 

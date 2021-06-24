@@ -17,7 +17,7 @@ export class ShopService {
       id: savedShop.id,
       name: savedShop.name,
       description: savedShop.description,
-      photo: savedShop.image,
+      image: savedShop.image,
     };
     return { ...shop };
   };
@@ -25,7 +25,7 @@ export class ShopService {
   getAll = async () => {
     const shops = await this.shopRepository.find();
     return shops;
-  }
+  };
 
   delete = async (id: string) => {
     const deleteShop = await this.shopRepository.delete({ id });
@@ -34,5 +34,4 @@ export class ShopService {
     }
     return deleteShop;
   };
-
 }

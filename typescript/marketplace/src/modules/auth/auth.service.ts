@@ -85,7 +85,7 @@ export class AuthService {
   };
 
   private createToken = ({ id, username }: IUser): string => {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 60 * 60 * 3; // 3 hours or an hour
     const secret = process.env.JWT_ACCESS_TOKEN_SECRET;
     const dataStoredInToken: DataStoredInToken = { id, username };
 

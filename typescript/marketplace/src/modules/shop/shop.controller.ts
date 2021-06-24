@@ -4,6 +4,7 @@ import { Controller } from '../../types/controller.interface';
 import { User } from '../auth/user.entity';
 import { CreateShopDTO } from './dto/create-shop.dto';
 import { ShopService } from './shop.service';
+import { imageUpload } from '../../utils/uploadImg';
 
 export class ShopController implements Controller {
   public path = '/shops';
@@ -15,13 +16,23 @@ export class ShopController implements Controller {
   }
 
   private initializeRoutes = (): void => {
-    this.router.post(`${this.path}/create`, authMiddleware, this.createShop)
-    this.router.delete(`${this.path}/delete`, authMiddleware, this.deleteShop)
+    this.router.post(
+      `${this.path}/create`,
+      authMiddleware,
+      imageUpload.single('image'),
+      this.createShop,
+    );
+    this.router.delete(
+      `${this.path}/delete/:id`,
+      authMiddleware,
+      this.deleteShop,
+    );
     this.router.get(`${this.path}`, this.getAllShops);
   };
 
   private createShop: RequestHandler = async (req, res, next) => {
     try {
+      // const shopData: CreateShopDTO = JSON.parse(req.body.data);
       const shopData: CreateShopDTO = req.body;
       const image = req.file && req.file.path;
       const { id }: User = req.user;
@@ -39,9 +50,9 @@ export class ShopController implements Controller {
       const shops = await this.shopService.getAll();
       res.status(200).json(shops);
     } catch (err) {
-      next(err)
+      next(err);
     }
-  }
+  };
 
   private deleteShop: RequestHandler = async (req, res, next) => {
     try {
@@ -51,5 +62,5 @@ export class ShopController implements Controller {
     } catch (err) {
       next(err);
     }
-  }
+  };
 }
