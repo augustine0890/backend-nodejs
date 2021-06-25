@@ -5,6 +5,8 @@ import { CreateShopDTO } from './dto/create-shop.dto';
 import { ShopService } from './shop.service';
 import { imageUpload } from '../../utils/uploadImg';
 import { UpdateShopDTO } from './dto/update-shop.dto';
+import { User } from '../auth/user.entity';
+import { WrongAuthenticationTokenException } from '../../exceptions/WrongAuthenticationTokenException';
 
 export class ShopController implements Controller {
   public path = '/shops';
@@ -18,26 +20,29 @@ export class ShopController implements Controller {
   private initializeRoutes = (): void => {
     this.router.post(
       `${this.path}/create`,
+      authMiddleware,
       imageUpload.single('image'),
       this.createShop,
     );
     this.router.delete(
-      `${this.path}/delete/:id`,
+      `${this.path}/delete/:shopId`,
       authMiddleware,
+      this.isOwner,
       this.deleteShop,
     );
     this.router.put(
-      `${this.path}/edit/:id`,
+      `${this.path}/edit/:shopId`,
       authMiddleware,
       imageUpload.single('image'),
+      this.isOwner,
       this.updateShop,
     );
     this.router.get(`${this.path}`, this.getAllShops);
-    this.router.get(`${this.path}/:id`, this.getShop);
+    this.router.get(`${this.path}/:id`, this.getShopById);
     this.router.get(
       `${this.path}/by/:ownerId`,
       authMiddleware,
-      this.getShopByOwer,
+      this.getShopByOwner,
     );
   };
 
@@ -46,12 +51,16 @@ export class ShopController implements Controller {
       // const shopData: CreateShopDTO = JSON.parse(req.body.data);
       const shopData: CreateShopDTO = req.body;
       const image = req.file! && req.file.path!;
-      const newShop = await this.shopService.create(image, shopData);
+      const { id }: User = req.user;
+      const newShop = await this.shopService.create(image, id, shopData);
 
       res.status(200).json(newShop);
       next();
     } catch (err) {
-      next(err);
+      res.status(400).json({
+        error: true,
+        message: `${err}.`,
+      });
     }
   };
 
@@ -68,9 +77,9 @@ export class ShopController implements Controller {
     }
   };
 
-  private getShop: RequestHandler = async (req, res, next) => {
+  private getShopById: RequestHandler = async (req, res, next) => {
+    const id = req.params.id;
     try {
-      const id = req.params.id;
       const shop = await this.shopService.getById(id);
       if (shop) {
         const { id, image, ...other } = shop;
@@ -78,11 +87,14 @@ export class ShopController implements Controller {
         next();
       }
     } catch (err) {
-      next(err);
+      res.status(400).json({
+        error: true,
+        message: `Could not retrieve the shop with #${id}. ${err}`,
+      });
     }
   };
 
-  private getShopByOwer: RequestHandler = async (req, res, next) => {
+  private getShopByOwner: RequestHandler = async (req, res, next) => {
     try {
       const ownerId = req.params.ownerId;
       const shops = await this.shopService.findByOwner(ownerId);
@@ -96,30 +108,50 @@ export class ShopController implements Controller {
     }
   };
 
+  private isOwner: RequestHandler = async (req, res, next) => {
+    const { id }: User = req.user;
+    const shopId = req.params.shopId;
+    const ownerId = await this.shopService.getOwner(shopId);
+    const isOwner = ownerId === id;
+
+    if (!isOwner) {
+      res.status(403).json({
+        error: true,
+        message: 'User is not authorized.',
+      });
+      next(new WrongAuthenticationTokenException());
+    }
+    next();
+  };
+
   private deleteShop: RequestHandler = async (req, res, next) => {
+    const shopId = req.params.shopId;
     try {
-      const id = req.params.id;
-      await this.shopService.delete(id);
+      await this.shopService.delete(shopId);
       res.status(200).json({ success: true });
+      next();
     } catch (err) {
-      next(err);
+      res.status(400).json({
+        error: true,
+        message: `Could not delete the shop with #${shopId}. ${err}`,
+      });
     }
   };
 
   private updateShop: RequestHandler = async (req, res, next) => {
+    const shopId = req.params.shopId;
     try {
-      const id = req.params.id;
       const image = req.file! && req.file.path!;
       const updateShopData: UpdateShopDTO = image
         ? { image, ...req.body }
         : req.body;
-      const newShop = await this.shopService.update(id, updateShopData);
+      const newShop = await this.shopService.update(shopId, updateShopData);
       res.status(200).json(newShop);
       next();
     } catch (err) {
       res.status(400).json({
         error: true,
-        message: `Could not update the shop ${err}.`,
+        message: `Could not edit the shop with #${shopId}. ${err}.`,
       });
     }
   };

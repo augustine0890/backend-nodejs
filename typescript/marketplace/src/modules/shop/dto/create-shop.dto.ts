@@ -8,8 +8,4 @@ export class CreateShopDTO {
   @IsString()
   @IsNotEmpty()
   description: string;
-
-  @IsString()
-  @IsNotEmpty()
-  ownerId: string;
 }

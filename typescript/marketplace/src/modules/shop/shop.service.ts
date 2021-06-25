@@ -9,13 +9,14 @@ export class ShopService {
   private shopRepository = getRepository(Shop);
   private authService = new AuthService();
 
-  create = async (image: string, shopData: CreateShopDTO) => {
+  create = async (image: string, id: string, shopData: CreateShopDTO) => {
     const newShop = this.shopRepository.create({
       ...shopData,
       image: image,
+      owner: { id } as User,
     });
 
-    const owner = await this.authService.get(shopData.ownerId);
+    const owner = await this.authService.get(id);
 
     if (owner && owner.seller) {
       const savedShop = await this.shopRepository.save(newShop);
@@ -24,7 +25,7 @@ export class ShopService {
         name: savedShop.name,
         description: savedShop.description,
         image: savedShop.image,
-        ownerId: savedShop.owner,
+        owner: savedShop.owner,
       };
       return { ...shop };
     } else {
@@ -54,6 +55,17 @@ export class ShopService {
     return shop;
   };
 
+  getOwner = async (id: string) => {
+    const shop = await this.shopRepository.findOne({
+      relations: ['owner'],
+      where: { id: id },
+    });
+    if (!shop) {
+      throw new Error(`Could not find the shop with #${id}.`);
+    }
+    return shop.owner.id;
+  };
+
   findByOwner = async (ownerId: string): Promise<Shop[]> => {
     const shops = await this.shopRepository.find({
       where: {
@@ -66,7 +78,7 @@ export class ShopService {
   delete = async (id: string) => {
     const deleteShop = await this.shopRepository.delete({ id });
     if (deleteShop.affected === 0) {
-      throw new Error(`Could not delete Shop with #${id}.`);
+      throw new Error(`Could not delete the shop with #${id}.`);
     }
     return deleteShop;
   };
