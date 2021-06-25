@@ -61,6 +61,7 @@ export class ShopController implements Controller {
         error: true,
         message: `${err}.`,
       });
+      next(err);
     }
   };
 

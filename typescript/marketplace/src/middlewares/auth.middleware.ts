@@ -10,7 +10,7 @@ import { HttpException } from '../exceptions/HttpException';
 
 export const authMiddleware = async (
   req: Request,
-  _: Response,
+  res: Response,
   next: NextFunction,
 ) => {
   const userRepository = getRepository(User);
@@ -39,6 +39,7 @@ export const authMiddleware = async (
     }
 
     req.user = user;
+    res.locals = { ...res.locals, user: user };
     next();
   } catch (err) {
     next(new WrongAuthenticationTokenException());

@@ -1,5 +1,6 @@
 import { ConnectionOptions } from 'typeorm';
 import { User } from './modules/auth/user.entity';
+import { Product } from './modules/product/product.entity';
 import { Shop } from './modules/shop/shop.entity';
 
 const developmentConfig: ConnectionOptions = {
@@ -9,7 +10,7 @@ const developmentConfig: ConnectionOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [User, Shop],
+  entities: [User, Shop, Product],
   migrations: ['src/migration/**/*.ts'],
   synchronize: true,
   logging: true,

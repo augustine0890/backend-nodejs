@@ -1,28 +1,36 @@
+import { IsNumber } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../auth/user.entity';
-import { Product } from '../product/product.entity';
+import { Shop } from '../shop/shop.entity';
 
-@Entity('shops')
-export class Shop {
+@Entity('products')
+export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
+  @Column()
+  description: string;
+
   @Column({ name: 'image', nullable: true })
   image?: string;
 
   @Column()
-  description: string;
+  category: string;
+
+  @Column({ nullable: false })
+  quantity: number;
+
+  @Column({ nullable: false, type: 'float' })
+  price: number;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -37,9 +45,6 @@ export class Shop {
   })
   update_at: Date;
 
-  @OneToMany(() => Product, (product: Product) => product.shop)
-  products: Product[];
-
-  @ManyToOne(() => User, (onwer: User) => onwer.shops)
-  owner: User;
+  @ManyToOne(() => Shop, (shop: Shop) => shop.products)
+  shop: Shop;
 }
