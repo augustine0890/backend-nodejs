@@ -99,12 +99,14 @@ export class ShopController implements Controller {
     try {
       const ownerId = req.params.ownerId;
       const shops = await this.shopService.findByOwner(ownerId);
-      res.status(200).json(shops);
-      next();
+      if (shops) {
+        res.status(200).json(shops);
+        next();
+      }
     } catch (err) {
       res.status(400).json({
         error: true,
-        message: `{err}`,
+        message: `${err}`,
       });
     }
   };

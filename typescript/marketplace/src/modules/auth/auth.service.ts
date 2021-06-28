@@ -64,8 +64,12 @@ export class AuthService {
 
   get = async (id: string) => {
     const user = await this.userRepository.findOne(id);
+    if (!user) {
+      throw new Error();
+    }
     return user;
   };
+
   update = async (id: string, info: UpdateUserDTO) => {
     let user = await this.userRepository.update(id, info);
     return user;

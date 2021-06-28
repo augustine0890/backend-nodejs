@@ -23,6 +23,7 @@ export class ProductController implements Controller {
     );
     this.router.get(`${this.path}`, this.getAllProducts);
     this.router.get(`${this.path}/:productId`, this.getProductById);
+    this.router.get(`${this.path}/by/:shopId`, this.getProductByShop);
   };
 
   private createProduct: RequestHandler = async (req, res, next) => {
@@ -72,6 +73,22 @@ export class ProductController implements Controller {
       res.status(400).json({
         error: true,
         message: `Could not retrieve the product with #${id}. ${err}`,
+      });
+    }
+  };
+
+  private getProductByShop: RequestHandler = async (req, res, next) => {
+    try {
+      const shopId = req.params.shopId;
+      const products = await this.productService.findByShop(shopId);
+      if (products) {
+        res.status(200).json(products);
+        next();
+      }
+    } catch (err) {
+      res.status(400).json({
+        error: true,
+        message: `${err}`,
       });
     }
   };

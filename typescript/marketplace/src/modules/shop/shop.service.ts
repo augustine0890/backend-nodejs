@@ -52,6 +52,9 @@ export class ShopService {
 
   getById = async (id: string) => {
     const shop = await this.shopRepository.findOne(id);
+    if (!shop) {
+      throw new Error();
+    }
     return shop;
   };
 
