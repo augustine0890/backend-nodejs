@@ -21,6 +21,7 @@ export class ProductController implements Controller {
       imageUpload.single('image'),
       this.createProduct,
     );
+    this.router.get(`${this.path}`, this.getAllProducts);
   };
 
   private createProduct: RequestHandler = async (req, res, next) => {
@@ -43,4 +44,18 @@ export class ProductController implements Controller {
       });
     }
   };
+
+  private getAllProducts: RequestHandler = async (req, res, next) => {
+    try {
+      const limit = Number(req.query.page);
+      const products = await this.productService.getAll(limit);
+      res.status(200).json(products);
+      next();
+    } catch (err) {
+      res.status(400).json({
+        error: true,
+        message: `Could not get all Products. ${err}`,
+      });
+    }
+  }
 }

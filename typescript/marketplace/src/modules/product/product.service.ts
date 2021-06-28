@@ -24,4 +24,9 @@ export class ProductService {
     };
     return { ...product };
   };
+
+  getAll = async (page: number = 10) => {
+    const products = await this.productRepository.find({ take: page });
+    return products;
+  }
 }
