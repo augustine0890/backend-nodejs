@@ -8,7 +8,7 @@ import { AuthenticationTokenMissingException } from '../exceptions/Authenticatio
 import { WrongAuthenticationTokenException } from '../exceptions/WrongAuthenticationTokenException';
 import { HttpException } from '../exceptions/HttpException';
 
-export const authMiddleware = async (
+export const authenticatedMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction,

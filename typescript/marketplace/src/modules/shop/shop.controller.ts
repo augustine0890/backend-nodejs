@@ -1,5 +1,5 @@
 import express, { RequestHandler } from 'express';
-import { authMiddleware } from '../../middlewares/auth.middleware';
+import { authenticatedMiddleware } from '../../middlewares/authenticated.middleware';
 import { Controller } from '../../types/controller.interface';
 import { CreateShopDTO } from './dto/create-shop.dto';
 import { ShopService } from './shop.service';
@@ -20,19 +20,19 @@ export class ShopController implements Controller {
   private initializeRoutes = (): void => {
     this.router.post(
       `${this.path}/create`,
-      authMiddleware,
+      authenticatedMiddleware,
       imageUpload.single('image'),
       this.createShop,
     );
     this.router.delete(
       `${this.path}/delete/:shopId`,
-      authMiddleware,
+      authenticatedMiddleware,
       this.isOwner,
       this.deleteShop,
     );
     this.router.put(
       `${this.path}/edit/:shopId`,
-      authMiddleware,
+      authenticatedMiddleware,
       imageUpload.single('image'),
       this.isOwner,
       this.updateShop,
@@ -41,7 +41,7 @@ export class ShopController implements Controller {
     this.router.get(`${this.path}/:shopId`, this.getShopById);
     this.router.get(
       `${this.path}/by/:ownerId`,
-      authMiddleware,
+      authenticatedMiddleware,
       this.getShopByOwner,
     );
   };

@@ -1,3 +1,4 @@
+import { some } from 'lodash';
 import { getRepository } from 'typeorm';
 import { Shop } from '../shop/shop.entity';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -45,5 +46,12 @@ export class ProductService {
       },
     });
     return products;
+  };
+
+  delete = async (productId: string) => {
+    const deleteProduct = await this.productRepository.delete(productId);
+    if (deleteProduct.affected === 0) {
+      throw new Error(`Could not delete the product with #${productId}`);
+    }
   };
 }

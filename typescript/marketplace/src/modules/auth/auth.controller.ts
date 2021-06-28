@@ -8,7 +8,7 @@ import { Controller } from '../../types/controller.interface';
 import { User } from './user.entity';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { authMiddleware } from '../../middlewares/auth.middleware';
+import { authenticatedMiddleware } from '../../middlewares/authenticated.middleware';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { validationMiddleware } from '../../middlewares/validation.middleware';
 import { HttpException } from '../../exceptions/HttpException';
@@ -35,10 +35,10 @@ export class AuthController implements Controller {
         validationMiddleware(LoginUserDTO),
         this.signIn,
       )
-      .get(this.path, authMiddleware, this.getCurrentUser)
+      .get(this.path, authenticatedMiddleware, this.getCurrentUser)
       .get('/user/:id', this.getUserById)
-      .patch('/user', authMiddleware, this.updateUser)
-      .delete(this.path, authMiddleware, this.deleteUser)
+      .patch('/user', authenticatedMiddleware, this.updateUser)
+      .delete(this.path, authenticatedMiddleware, this.deleteUser)
       .get('/users', this.getAllUsers)
       .post(`${this.path}/encrypt`, this.encryptPayload)
       .post(`${this.path}/decrypt`, this.decryptPayload);
