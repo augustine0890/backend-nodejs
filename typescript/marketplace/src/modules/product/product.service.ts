@@ -28,5 +28,10 @@ export class ProductService {
   getAll = async (page: number = 10) => {
     const products = await this.productRepository.find({ take: page });
     return products;
-  }
+  };
+
+  getById = async (id: string) => {
+    const product = await this.productRepository.findOne(id);
+    return product;
+  };
 }

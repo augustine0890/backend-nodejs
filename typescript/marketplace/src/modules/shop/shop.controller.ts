@@ -38,7 +38,7 @@ export class ShopController implements Controller {
       this.updateShop,
     );
     this.router.get(`${this.path}`, this.getAllShops);
-    this.router.get(`${this.path}/:id`, this.getShopById);
+    this.router.get(`${this.path}/:shopId`, this.getShopById);
     this.router.get(
       `${this.path}/by/:ownerId`,
       authMiddleware,
@@ -79,7 +79,7 @@ export class ShopController implements Controller {
   };
 
   private getShopById: RequestHandler = async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params.shopId;
     try {
       const shop = await this.shopService.getById(id);
       if (shop) {
