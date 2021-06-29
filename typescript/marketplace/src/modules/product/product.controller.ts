@@ -4,6 +4,7 @@ import { authorizedMiddleware } from '../../middlewares/authorized.middleware';
 import { Controller } from '../../types/controller.interface';
 import { imageUpload } from '../../utils/uploadImg';
 import { CreateProductDTO } from './dto/create-product.dto';
+import { GetAllProductsDTO } from './dto/get-all-product.dto';
 import { ProductService } from './product.service';
 
 export class ProductController implements Controller {
@@ -23,7 +24,6 @@ export class ProductController implements Controller {
       this.createProduct,
     );
     this.router.get(`${this.path}`, this.getAllProducts);
-    this.router.get(`${this.path}/:productId`, this.getProductById);
     this.router.get(`${this.path}/by/:shopId`, this.getProductByShop);
     this.router.delete(
       `${this.path}/delete/:productId`,
@@ -31,6 +31,8 @@ export class ProductController implements Controller {
       authorizedMiddleware,
       this.deleteProduct,
     );
+    // this.router.get(`${this.path}/latest?`, this.getProductsLatest);
+    this.router.get(`${this.path}/:productId`, this.getProductById);
   };
 
   private createProduct: RequestHandler = async (req, res, next) => {
@@ -56,8 +58,8 @@ export class ProductController implements Controller {
 
   private getAllProducts: RequestHandler = async (req, res, next) => {
     try {
-      const limit = Number(req.query.page);
-      const products = await this.productService.getAll(limit);
+      const { page, latest }: GetAllProductsDTO = req.query;
+      const products = await this.productService.getAll(page, latest);
       res.status(200).json(products);
       next();
     } catch (err) {
@@ -81,6 +83,7 @@ export class ProductController implements Controller {
         error: true,
         message: `Could not retrieve the product with #${id}. ${err}`,
       });
+      throw new Error(err);
     }
   };
 
@@ -97,6 +100,7 @@ export class ProductController implements Controller {
         error: true,
         message: `${err}`,
       });
+      throw new Error(err);
     }
   };
 
