@@ -1,0 +1,242 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: NFT-Management-partners
+servers:
+  - url: http://localhost:3001/dev/v1/management
+    description: Local server
+  - url: https://klhqlmfmz6.execute-api.ap-northeast-2.amazonaws.com/dev/v1/management
+    description: Development server
+  - url: http://localhost:30013
+    description: Production server
+  
+paths:
+  /playdapp/partner/apply:
+    post:
+      summary: 게임사 승인
+      operationId: applyPartner
+      tags:
+        - partner apply
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerApplyRequest'
+            examples:
+              partner:
+                value:
+                  seq_partner: 1
+                  status: 'normal'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerResponse"
+
+
+  /playdapp/game/apply:
+    post:
+      summary: 게임 승인
+      operationId: applyGame
+      tags:
+        - game apply
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameApplyRequest'
+            examples:
+              partner:
+                value:
+                  seq_game: 1
+                  status: 'normal'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameResponse"
+
+
+
+  /playdapp/nft/info/update:
+    post:
+      summary: nft 정보 업데이트
+      operationId: nftInfoUpdate
+      tags:
+        - nft info update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NFTInfoUpdateRequest'
+            examples:
+              partner:
+                value:
+                  seq_nft_info: 1
+                  contract_address: '0xF952342bBE9751e184be34131BB3Ad129da75e01'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NftResponse"
+
+
+
+  /playdapp/nft/item/excel/rune:
+    post:
+      summary: 게임아이템 엑셀 등록 룬
+      operationId: nftItemExcelRune
+      tags:
+        - game item excel rune
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameResponse"
+
+  /playdapp/nft/item/excel/hero:
+    post:
+      summary: 게임아이템 엑셀 등록 영웅
+      operationId: nftItemExcelHero
+      tags:
+        - game item excel hero
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameResponse"
+
+
+components:
+  schemas:
+    PartnerApplyRequest:
+      type: object
+      required:
+        - seq_partner
+        - status
+      properties:
+        seq_partner:
+          description: NFT-Management 게임사 seq
+          type: integer
+        status:
+          description: 파트너 상태 변경 (normal, block)
+          type: string
+
+    PartnerResponse:
+      type: object
+      required:
+        - company
+        - email
+        - thirdparty
+        - status
+      properties:
+        seq_partner:
+          description: NFT-Management 게임사 seq
+          type: integer
+        company:
+          description: 게임사 명
+          type: string
+        email:
+          description: 게임사 명
+          type: string
+        thirdparty:
+          description: 외부업체(ex, 게임팟 등)에서 부여한 식별자
+          type: integer
+        status:
+          description: 게임사 등록 상태
+          type: string
+        
+    GameApplyRequest:
+      type: object
+      required:
+        - seq_game
+        - status
+      properties:
+        seq:
+          description: NFT-Management 게임 seq
+          type: integer
+        status:
+          description: 게임 상태 변경 (normal, block)
+          type: string
+    
+    GameResponse:
+      type: object
+      required:
+        - seq_game
+        - partner_seq
+      properties:
+        seq_game:
+          description: 게임 seq
+          type: integer
+        seq_partner:
+          description: 파트너 seq
+          type: integer
+        title:
+          description: 게임명
+          type: string
+
+
+    NFTInfoUpdateRequest:
+      type: object
+      required:
+        - seq_nft_info
+        - status
+      properties:
+        seq_nft_info:
+          description: NFT-Management nft info
+          type: integer
+        base_uri:
+          description: nft metadata base uri
+          type: string
+        contract:
+          description: nft contract address
+          type: string
+
+
+    NftResponse:
+      type: object
+      required:
+        - seq_nft_info
+        - seq_game
+        - symbol
+        - name
+        - network
+        - eip
+        - status
+        - base_uri
+        - contract_address 
+        - date_create
+        - date_update
+
+      properties:
+        seq_nft_info:
+          description: nft seq
+          type: integer
+        seq_game:
+          description: 게임 seq
+          type: integer
+        symbol:
+          description: nft symbol
+          type: string
+        name:
+          description: nft name
+          type: string
+        network:
+          description: nft network(luniverse or ethereum)
+          type: integer
+        eip:
+          description: eip (ERC721 or ERC1155)
+          type: integer
