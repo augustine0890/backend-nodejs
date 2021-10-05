@@ -121,4 +121,4 @@ dist
 .pnp.*
 
 // Databases
-db
+mysql
