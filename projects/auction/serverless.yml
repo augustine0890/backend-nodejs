@@ -131,6 +131,14 @@ functions:
           path: /auction/{id}
           method: GET
 
+  placeBid:
+    handler: src/handlers/placeBid.handler
+    events:
+      - http:
+          path: /auction/{id}/bid
+          method: PATCH
+
+
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
