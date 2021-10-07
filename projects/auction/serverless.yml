@@ -124,6 +124,13 @@ functions:
           path: /auctions
           method: GET
 
+  getAuction:
+    handler: src/handlers/getAuction.handler
+    events:
+      - http:
+          path: /auction/{id}
+          method: GET
+
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
