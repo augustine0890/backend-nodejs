@@ -138,6 +138,10 @@ functions:
           path: /auction/{id}/bid
           method: PATCH
 
+  processAuctions:
+    handler: src/handlers/processAuctions.handler
+    # events:
+      # - schedule: rate(1 minute)
 
 #    Define function environment variables here
 #    environment:
