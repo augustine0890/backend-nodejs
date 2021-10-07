@@ -117,6 +117,12 @@ functions:
 #          conditions:
 #            host: example.com
 #            path: /hello
+  getAuctions:
+    handler: src/handlers/getAuctions.handler
+    events:
+      - http:
+          path: /auctions
+          method: GET
 
 #    Define function environment variables here
 #    environment:
