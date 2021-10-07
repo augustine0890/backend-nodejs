@@ -11,10 +11,12 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "serverless-bundle": "^5.0.2",
+    "serverless-iam-roles-per-function": "^3.2.0-e97ab49",
     "serverless-pseudo-parameters": "^2.6.1",
     "webpack": "^5.57.1"
   },
   "dependencies": {
-    "aws-sdk": "^2.1001.0"
+    "aws-sdk": "^2.1001.0",
+    "uuid": "^8.3.2"
   }
 }
