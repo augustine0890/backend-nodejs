@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "moment": "^2.29.1",
     "sequelize": "^6.6.5",
     "sequelize-auto": "^0.8.4"
   }
